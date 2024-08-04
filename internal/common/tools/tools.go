@@ -109,7 +109,10 @@ type UESimulationConfig struct {
 	NumPduSessions           int
 }
 
-func SimulateSingleUE(simConfig UESimulationConfig, wg *sync.WaitGroup) {
+func SimulateSingleUE(simConfig UESimulationConfig, wg *sync.WaitGroup, wgMain *sync.WaitGroup) {
+	if wgMain != nil {
+		defer wgMain.Done()
+	}
 	numGnb := len(simConfig.Gnbs)
 	ueCfg := simConfig.Cfg
 	ueCfg.Ue.Msin = IncrementMsin(simConfig.UeId, simConfig.Cfg.Ue.Msin)

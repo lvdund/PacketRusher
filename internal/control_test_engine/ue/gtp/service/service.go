@@ -140,20 +140,23 @@ func SetupGtpInterface(ue *context.UEContext, msg gnbContext.UEMessage) {
 		}
 		_ = netlink.LinkDel(vrfDevice)
 
-		if err := netlink.LinkAdd(vrfDevice); err != nil {
-			log.Fatal("[UE][DATA] Unable to create VRF for UE", err)
-			return
-		}
+		////////////// Disable netlink //////////////
+		log.Warnln("Disable netlink")
 
-		if err := netlink.LinkSetMaster(link, vrfDevice); err != nil {
-			log.Fatal("[UE][DATA] Unable to set GTP tunnel as slave of VRF interface", err)
-			return
-		}
+		// if err := netlink.LinkAdd(vrfDevice); err != nil {
+		// 	log.Fatal("[UE][DATA] Unable to create VRF for UE", err)
+		// 	return
+		// }
 
-		if err := netlink.LinkSetUp(vrfDevice); err != nil {
-			log.Fatal("[UE][DATA] Unable to set interface VRF UP", err)
-			return
-		}
+		// if err := netlink.LinkSetMaster(link, vrfDevice); err != nil {
+		// 	log.Fatal("[UE][DATA] Unable to set GTP tunnel as slave of VRF interface", err)
+		// 	return
+		// }
+
+		// if err := netlink.LinkSetUp(vrfDevice); err != nil {
+		// 	log.Fatal("[UE][DATA] Unable to set interface VRF UP", err)
+		// 	return
+		// }
 		pduSession.SetVrfDevice(vrfDevice)
 	}
 
