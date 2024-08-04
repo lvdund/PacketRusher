@@ -10,3 +10,5 @@ Setting 10 ue with wait start interval (500ms)
 ```bash
 sudo ./packetrusher multi-ue -n 10 -tr 500
 ```
+
+default packetrusher [readme](./README-packetrusher.md)
