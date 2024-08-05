@@ -11,4 +11,6 @@ Setting 10 ue with wait start interval (500ms)
 sudo ./packetrusher multi-ue -n 10 -tr 500
 ```
 
+! `Important: Setting buffer space available` - read file [run](./run.sh)
+
 default packetrusher [readme](./README-packetrusher.md)

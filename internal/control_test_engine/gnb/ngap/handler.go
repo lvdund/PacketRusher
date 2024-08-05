@@ -130,7 +130,7 @@ func HandlerInitialContextSetupRequest(gnb *context.GNBContext, message *ngapTyp
 			sst = make([]string, valor)
 			sd = make([]string, valor)
 
-			// list S-NSSAI(Single – Network Slice Selection Assistance Information).
+			// list S-NSSAI(Single - Network Slice Selection Assistance Information).
 			for i, items := range ies.Value.AllowedNSSAI.List {
 
 				if items.SNSSAI.SST.Value != nil {
@@ -1042,7 +1042,7 @@ func HandlerHandoverRequest(amf *context.GNBAmf, gnb *context.GNBContext, messag
 			sst = make([]string, valor)
 			sd = make([]string, valor)
 
-			// list S-NSSAI(Single – Network Slice Selection Assistance Information).
+			// list S-NSSAI(Single - Network Slice Selection Assistance Information).
 			for i, items := range ies.Value.AllowedNSSAI.List {
 
 				if items.SNSSAI.SST.Value != nil {

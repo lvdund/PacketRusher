@@ -1,9 +1,9 @@
 gnodeb:
   controlif:
-    ip: "192.168.0.9"
+    ip: "192.168.1.44"
     port: 9487
   dataif:
-    ip: "192.168.0.9"
+    ip: "192.168.1.44"
     port: 2152
   plmnlist:
     mcc: "208"
@@ -25,7 +25,7 @@ ue:
     mcc: "208"
     mnc: "93"
   snssai:
-    sst: 1
+    sst: 01
     sd: "010203" # optional, can be removed if not used
   integrity:
     nia0: false
@@ -38,7 +38,7 @@ ue:
     nea2: true
     nea3: false
 amfif:
-  - ip: "192.168.0.9"
+  - ip: "192.168.1.14"
     port: 38412
 logs:
-  level: 4
+  level: 3
