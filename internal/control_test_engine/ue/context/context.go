@@ -67,7 +67,8 @@ type UEContext struct {
 	// Sync primitive
 	scenarioChan chan scenario.ScenarioMessage
 
-	lock sync.Mutex
+	ExpFile string
+	lock    sync.Mutex
 }
 
 type Amf struct {
@@ -87,6 +88,8 @@ type UEPDUSession struct {
 	stopSignal    chan bool
 	Wait          chan bool
 	T3580Retries  int
+
+	Exp     Experiment
 
 	// TS 24.501 - 6.1.3.2.1.1 State Machine for Session Management
 	StateSM int
@@ -117,7 +120,7 @@ func (ue *UEContext) NewRanUeContext(msin string,
 	ueSecurityCapability *nasType.UESecurityCapability,
 	k, opc, op, amf, sqn, mcc, mnc, routingIndicator, dnn string,
 	sst int32, sd string, tunnelMode config.TunnelMode, scenarioChan chan scenario.ScenarioMessage,
-	gnbInboundChannel chan context.UEMessage, id int) {
+	gnbInboundChannel chan context.UEMessage, id int, logFile string) {
 
 	// added SUPI.
 	ue.UeSecurity.Msin = msin
@@ -165,6 +168,8 @@ func (ue *UEContext) NewRanUeContext(msin string,
 
 	ue.gnbInboundChannel = gnbInboundChannel
 	ue.scenarioChan = scenarioChan
+
+	ue.ExpFile = logFile
 
 	// added initial state for MM(NULL)
 	ue.StateMM = MM5G_NULL
@@ -446,7 +451,7 @@ func (ue *UEContext) GetMccAndMncInOctets() []byte {
 // operator decides to assign less than 4 digits to Routing Indicator, the remaining digits
 // shall be coded as "1111" to fill the 4 digits coding of Routing Indicator (see NOTE 2). If
 // no Routing Indicator is configured in the USIM, the UE shall coxde bits 1 to 4 of octet 8
-// of the Routing Indicator as "0000" and the remaining digits as “1111".
+// of the Routing Indicator as "0000" and the remaining digits as "1111".
 func (ue *UEContext) GetRoutingIndicatorInOctets() []byte {
 	if len(ue.UeSecurity.RoutingIndicator) == 0 {
 		ue.UeSecurity.RoutingIndicator = "0"

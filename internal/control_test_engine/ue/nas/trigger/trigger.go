@@ -15,6 +15,7 @@ import (
 	"my5G-RANTester/internal/control_test_engine/ue/nas/message/nas_control"
 	"my5G-RANTester/internal/control_test_engine/ue/nas/message/nas_control/mm_5gs"
 	"my5G-RANTester/internal/control_test_engine/ue/nas/message/sender"
+	"time"
 
 	"github.com/free5gc/nas"
 	"github.com/free5gc/nas/nasMessage"
@@ -54,8 +55,9 @@ func InitPduSessionRequest(ue *context.UEContext) {
 		log.Fatal("[UE][NAS] ", err)
 		return
 	}
-
+	pduSession.Exp.CreatedTime = time.Now()
 	InitPduSessionRequestInner(ue, pduSession)
+	pduSession.Exp.ActivatedTime = time.Now()
 }
 
 func InitPduSessionRequestInner(ue *context.UEContext, pduSession *context.UEPDUSession) {

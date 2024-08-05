@@ -16,7 +16,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func TestMultiUesInQueue(numUes int, tunnelMode config.TunnelMode, dedicatedGnb bool, loop bool, timeBetweenRegistration int, timeBeforeDeregistration int, timeBeforeNgapHandover int, timeBeforeXnHandover int, timeBeforeIdle int, timeBeforeReconnecting int, numPduSessions int) {
+func TestMultiUesInQueue(numUes int, tunnelMode config.TunnelMode, dedicatedGnb bool, loop bool, timeBetweenRegistration int, timeBeforeDeregistration int, timeBeforeNgapHandover int, timeBeforeXnHandover int, timeBeforeIdle int, timeBeforeReconnecting int, numPduSessions int, logFile string) {
 	if tunnelMode != config.TunnelDisabled {
 		if !dedicatedGnb {
 			log.Fatal("You cannot use the --tunnel option, without using the --dedicatedGnb option")
@@ -85,9 +85,8 @@ func TestMultiUesInQueue(numUes int, tunnelMode config.TunnelMode, dedicatedGnb 
 			scenarioChans[ueSimCfg.UeId] = make(chan procedures.UeTesterMessage)
 			ueSimCfg.ScenarioChan = scenarioChans[ueSimCfg.UeId]
 
-			//wgMain.Add(1)
-			//go tools.SimulateSingleUE(ueSimCfg, &wg, &wgMain)
-			tools.SimulateSingleUE(ueSimCfg, &wg, nil)
+			wgMain.Add(1)
+			go tools.SimulateSingleUE(ueSimCfg, &wg, &wgMain, logFile)
 
 			// Before creating a new UE, we wait for timeBetweenRegistration ms
 			time.Sleep(time.Duration(timeBetweenRegistration) * time.Millisecond)

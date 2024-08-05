@@ -22,7 +22,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func NewUE(conf config.Config, id int, ueMgrChannel chan procedures.UeTesterMessage, gnbInboundChannel chan context2.UEMessage, wg *sync.WaitGroup) chan scenario.ScenarioMessage {
+func NewUE(conf config.Config, id int, ueMgrChannel chan procedures.UeTesterMessage, gnbInboundChannel chan context2.UEMessage, wg *sync.WaitGroup, logFile string) chan scenario.ScenarioMessage {
 	// new UE instance.
 	ue := &context.UEContext{}
 	scenarioChan := make(chan scenario.ScenarioMessage)
@@ -45,7 +45,7 @@ func NewUE(conf config.Config, id int, ueMgrChannel chan procedures.UeTesterMess
 		conf.Ue.TunnelMode,
 		scenarioChan,
 		gnbInboundChannel,
-		id)
+		id, logFile)
 
 	go func() {
 		// starting communication with GNB and listen.
@@ -152,6 +152,14 @@ func ueMgrHandler(msg procedures.UeTesterMessage, ue *context.UEContext) bool {
 	case procedures.Terminate:
 		log.Info("[UE] Terminating UE as requested")
 		// If UE is registered
+		if len(ue.ExpFile) > 0 {
+			if ExpFile, err := os.OpenFile(ue.ExpFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644); err != nil {
+				log.Errorf("Failed to create logfile " + ue.ExpFile)
+			} else {
+				context.LogExpResults(ExpFile, ue)
+				ExpFile.Close()
+			}
+		}
 		if ue.GetStateMM() == context.MM5G_REGISTERED {
 			// Release PDU Sessions
 			for i := uint8(1); i <= 16; i++ {

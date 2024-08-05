@@ -109,7 +109,7 @@ type UESimulationConfig struct {
 	NumPduSessions           int
 }
 
-func SimulateSingleUE(simConfig UESimulationConfig, wg *sync.WaitGroup, wgMain *sync.WaitGroup) {
+func SimulateSingleUE(simConfig UESimulationConfig, wg *sync.WaitGroup, wgMain *sync.WaitGroup, logFile string) {
 	if wgMain != nil {
 		defer wgMain.Done()
 	}
@@ -130,7 +130,7 @@ func SimulateSingleUE(simConfig UESimulationConfig, wg *sync.WaitGroup, wgMain *
 
 		// Create a new UE coroutine
 		// ue.NewUE returns context of the new UE
-		ueTx := ue.NewUE(ueCfg, ueId, ueRx, simConfig.Gnbs[gnbIdGen(0)].GetInboundChannel(), wg)
+		ueTx := ue.NewUE(ueCfg, ueId, ueRx, simConfig.Gnbs[gnbIdGen(0)].GetInboundChannel(), wg, logFile)
 
 		// We tell the UE to perform a registration
 		ueRx <- procedures.UeTesterMessage{Type: procedures.Registration}
