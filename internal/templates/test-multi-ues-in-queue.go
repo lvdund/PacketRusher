@@ -85,8 +85,9 @@ func TestMultiUesInQueue(numUes int, tunnelMode config.TunnelMode, dedicatedGnb 
 			scenarioChans[ueSimCfg.UeId] = make(chan procedures.UeTesterMessage)
 			ueSimCfg.ScenarioChan = scenarioChans[ueSimCfg.UeId]
 
-			wgMain.Add(1)
-			go tools.SimulateSingleUE(ueSimCfg, &wg, &wgMain)
+			//wgMain.Add(1)
+			//go tools.SimulateSingleUE(ueSimCfg, &wg, &wgMain)
+			tools.SimulateSingleUE(ueSimCfg, &wg, nil)
 
 			// Before creating a new UE, we wait for timeBetweenRegistration ms
 			time.Sleep(time.Duration(timeBetweenRegistration) * time.Millisecond)

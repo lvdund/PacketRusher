@@ -84,8 +84,8 @@ func (ue *GNBUe) CopyFromPreviousContext(oldUeContext *GNBUe) {
 func (ue *GNBUe) CreatePduSession(pduSessionId int64, upfIp string, sst string, sd string, pduType uint64,
 	qosId int64, priArp int64, fiveQi int64, ulTeid uint32, dlTeid uint32) (*GnbPDUSession, error) {
 
-	if pduSessionId < 1 && pduSessionId > 16 {
-		return nil, errors.New("PDU Session Id must lies between 0 and 15, id: " + string(pduSessionId))
+	if pduSessionId < 1 || pduSessionId > 16 {
+		return nil, errors.New("PDU Session Id must lies between 0 and 16, id: " + string(pduSessionId))
 	}
 
 	if ue.context.pduSession[pduSessionId-1] != nil {
@@ -113,7 +113,7 @@ func (ue *GNBUe) CreatePduSession(pduSessionId int64, upfIp string, sst string, 
 }
 
 func (ue *GNBUe) GetPduSession(pduSessionId int64) (*GnbPDUSession, error) {
-	if pduSessionId < 1 && pduSessionId > 16 {
+	if pduSessionId < 1 || pduSessionId > 16 {
 		return nil, errors.New("PDU Session Id must lies between 1 and 16, id: " + string(pduSessionId))
 	}
 
@@ -129,7 +129,7 @@ func (ue *GNBUe) SetPduSessions(pduSessions [16]*GnbPDUSession) {
 }
 
 func (ue *GNBUe) DeletePduSession(pduSessionId int64) error {
-	if pduSessionId < 1 && pduSessionId > 16 {
+	if pduSessionId < 1 || pduSessionId > 16 {
 		return errors.New("PDU Session Id must lies between 1 and 16, id: " + string(pduSessionId))
 	}
 
@@ -147,7 +147,7 @@ func (ue *GNBUe) GetUeMaskedImeiSv() string {
 }
 
 func (ue *GNBUe) GetSelectedNssai(pduSessionId int64) (string, string) {
-	pduSession := ue.context.pduSession[pduSessionId]
+	pduSession := ue.context.pduSession[pduSessionId-1]
 	if pduSession != nil {
 		return pduSession.sst, pduSession.sd
 	}

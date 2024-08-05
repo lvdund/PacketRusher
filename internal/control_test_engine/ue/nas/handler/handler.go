@@ -366,12 +366,13 @@ func HandlerDlNasTransportPduaccept(ue *context.UEContext, message *nas.Message)
 		// update PDU Session information.
 		pduSessionId := pduSessionEstablishmentAccept.GetPDUSessionID()
 		pduSession, err := ue.GetPduSession(pduSessionId)
-		// change the state of ue(SM)(PDU Session Active).
-		pduSession.SetStateSM_PDU_SESSION_ACTIVE()
 		if err != nil {
 			log.Error("[UE][NAS] Receiving PDU Session Establishment Accept about an unknown PDU Session, id: ", pduSessionId)
 			return
 		}
+
+		// change the state of ue(SM)(PDU Session Active).
+		pduSession.SetStateSM_PDU_SESSION_ACTIVE()
 
 		// get UE IP
 		UeIp := pduSessionEstablishmentAccept.GetPDUAddressInformation()

@@ -16,6 +16,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const (
+	NasCountWindow uint8 = 40
+)
+
 func DispatchNas(ue *context.UEContext, message []byte) {
 
 	var cph bool
@@ -72,7 +76,9 @@ func DispatchNas(ue *context.UEContext, message []byte) {
 		}
 
 		// check security header(Downlink data).
-		if ue.UeSecurity.DLCount.SQN() > sequenceNumber {
+		seqDiff := int(ue.UeSecurity.DLCount.SQN()) - int(sequenceNumber)
+		if seqDiff > int(NasCountWindow) {
+			log.Infof("Increate overflow:%d", seqDiff)
 			ue.UeSecurity.DLCount.SetOverflow(ue.UeSecurity.DLCount.Overflow() + 1)
 		}
 		ue.UeSecurity.DLCount.SetSQN(sequenceNumber)
@@ -84,14 +90,14 @@ func DispatchNas(ue *context.UEContext, message []byte) {
 				log.Error("error in encrypt algorithm")
 				return
 			} else {
-				log.Info("[UE][NAS] successful NAS CIPHERING")
+				log.Infof("[UE][NAS] successful NAS CIPHERING: [seqNum=%d, nasCount=%d]", sequenceNumber, ue.UeSecurity.DLCount.Get())
 			}
 		}
 
 		// decode NAS message.
 		err := m.PlainNasDecode(&payload)
 		if err != nil {
-			log.Error("[UE][NAS] Decode NAS error", err)
+			log.Errorf("[UE][NAS] Decode NAS error [pdu=%x(len=%d)]: %+v", message, len(message), err)
 		}
 
 		if newSecurityContext {
